@@ -1,0 +1,87 @@
+import { useState } from 'react'
+
+
+
+const Input = () => {
+
+
+
+  const [input, setInput] = useState('')
+  const [formActive, setFormActive] = useState(false)
+
+  const inputValid = input.trim() !== ''
+  const showInputError = formActive && !inputValid
+  const formClass = `form-control${ showInputError ? ' invalid' : '' }`
+
+
+  const inputHandler = event => {
+
+    setInput(event.target.value)
+
+  }
+
+  const blurHandler = () => {
+
+    !formActive && setFormActive(true)
+
+  }
+
+  const submitHandler = event => {
+
+    event.preventDefault()
+
+    if(!inputValid) {
+      !formActive && setFormActive(true)
+      return
+    }
+    setInput('')
+    formActive && setFormActive(false)
+
+  }
+
+
+  return (
+
+    <form onSubmit={ submitHandler }>
+
+
+
+      <div className={ formClass }>
+        <label htmlFor='input'>
+          input
+        </label>
+
+        <input
+          type='text'
+          id='input'
+          onInput={ inputHandler }
+          onBlur={ blurHandler }
+          value={ input }
+        />
+
+        { showInputError && (
+          <p className='error-text'>
+            error_input
+          </p>
+        ) }
+      </div>
+
+      <div className='form-actions'>
+        <button type='submit'>
+          submit
+        </button>
+      </div>
+
+
+
+    </form>
+
+  )
+
+
+
+}
+
+
+
+export default Input

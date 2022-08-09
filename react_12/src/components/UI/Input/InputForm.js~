@@ -1,0 +1,44 @@
+import Error './Error'
+
+
+
+const Input = dataProps => {
+
+
+
+  return (
+
+    <div className={ input_1_class }>
+
+
+      
+      <label htmlFor='input_1'>
+        input_1
+      </label>
+
+      <input
+        type='text'
+        id='input_1'
+        value={ input_1_hook.value }
+        onInput={ input_1_hook.inputHandler }
+        onBlur={ input_1_hook.blurHandler }
+      />
+
+      { input_1_hook.showError && (
+        <Error innerText='error_input_1' />
+      ) }
+
+
+      
+    </div>
+
+    
+  )
+
+  
+  
+}
+
+
+
+export default Input

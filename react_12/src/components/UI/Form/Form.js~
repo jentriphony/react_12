@@ -1,0 +1,164 @@
+import { useReducer } from 'react'
+import Error from './Error'
+
+
+
+const initialInputs = {
+  input_1: {
+    value: '',
+    valid: false,
+    active: false
+  },
+  input_2: {
+    value: '',
+    valid: false,
+    active: false
+  },
+  input_3: {
+    value: '',
+    valid: false,
+    active: false
+  }
+}
+const copy = initialValue => {
+
+  return JSON.parse(JSON.stringify(initialValue))
+
+}
+
+const inputsReducer = (previousInputs, reducerProps) => {
+
+  const action = reducerProps.action
+  if(action === 'RESET') {
+    return copy(initialInputs)
+  }
+  if(action === 'SET') {
+    const value = reducerProps.value
+    const result = copy(previousInputs)
+    previousInputs[reducerProps.id] = {
+      value: value,
+      valid: value.trim() !== '',
+      active: true
+    }
+    return result
+  }
+  
+}
+
+const Form = () => {
+
+
+
+  const [inputs, dispatchInputs] = useReducer(inputsReducer, copy(initialInputs))
+
+  const showErrorInput_1 = inputs.input_1.active && !inputs.input_1.valid
+  const showErrorInput_2 = inputs.input_2.active && !inputs.input_2.valid
+  const showErrorInput_3 = inputs.input_3.active && !inputs.input_3.valid
+  const formValid = inputs.input_1.valid && inputs.input_2.valid && inputs.input_3.valid
+
+
+
+  const inputHandler = event => {
+
+    const id = event.target.id;
+    [ 'input_1',
+      'input_2',
+      'input_3'
+    ].find(item => item === id) && dispatchInputs({
+      action: 'SET',
+      id: id,
+      value: event.target.value
+    })
+
+  }
+  
+  const submitHandler = event => {
+
+    event.preventDefault()
+
+    dispatchInputs({ action: 'RESET' })
+
+  }
+  
+  
+  return (
+    
+    <form className='form' onSubmit={ submitHandler }>
+
+
+
+      <div className='control-group'>
+        <div className={ `form-control${ showErrorInput_1 ? ' invalid' : '' }` }>
+          <label htmlFor='input_1'>
+            input_1
+          </label>
+
+	  <input
+            type='text'
+            id='input_1'
+            value={ inputs.input_1.value }
+            onInput={ inputHandler }
+            onBlur={ inputHandler }
+	  />
+
+          { showErrorInput_1 && (
+            <Error innerText='error_input_1' />
+          ) }
+        </div>
+
+        <div className={ `form-control${ showErrorInput_2 ? ' invalid' : '' }` }>
+          <label htmlFor='input_2'>
+            input_2
+          </label>
+          
+          <input
+            type='text'
+            id='input_2'
+            value={ inputs.input_2.value }
+            onInput={ inputHandler }
+            onBlur={ inputHandler }
+          />
+
+          { showErrorInput_2 && (
+            <Error innerText='error_input_2' />
+          ) }
+        </div>
+      </div>
+
+      <div className={ `form-control${ showErrorInput_3 ? ' invalid' : '' }` }>
+        <label htmlFor='input_3'>
+          input_3
+        </label>
+
+        <input
+          type='text'
+          id='input_3'
+          value={ inputs.input_3.value }
+          onInput={ inputHandler }
+          onBlur={ inputHandler }
+        />
+
+        { showErrorInput_3 && (
+          <Error innerText='error_input_3' />
+        ) }
+      </div>
+
+      <div className='form-actions'>
+        <button type='submit' disabled={ !formValid }>
+          submit
+        </button>
+      </div>
+
+
+
+    </form>
+
+  )
+
+
+
+}
+
+
+
+export default Form
